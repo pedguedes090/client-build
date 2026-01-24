@@ -232,9 +232,9 @@ function ReaderPage() {
                 />
             </div>
 
-            {/* Top Nav - Centered */}
-            <div className={`fixed top-0.5 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur transition-transform duration-300 ${showNav ? 'translate-y-0' : '-translate-y-full'}`}>
-                <div className="max-w-screen-xl mx-auto px-2 sm:px-4 py-1.5 sm:py-2 flex items-center justify-center gap-1.5 sm:gap-3">
+            {/* Bottom Nav - Centered (Moved from Top) */}
+            <div className={`fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur transition-transform duration-300 ${showNav ? 'translate-y-0' : 'translate-y-full'} pb-[env(safe-area-inset-bottom)]`}>
+                <div className="max-w-screen-xl mx-auto px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-center gap-1.5 sm:gap-3 pb-6 sm:pb-2">
                     {/* Back button */}
                     <Link
                         to={comic ? `/truyen/${comic.slug || slugify(comic.title)}` : '/'}
@@ -248,7 +248,7 @@ function ReaderPage() {
                     <button
                         onClick={goToPrevChapter}
                         disabled={!chapter.prev_chapter}
-                        className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-gray-700 dark:text-white bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed rounded text-sm sm:text-base"
+                        className="w-10 h-10 flex items-center justify-center text-gray-700 dark:text-white bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed rounded text-base"
                         title="Chương trước"
                     >
                         <LeftOutlined />
@@ -257,11 +257,11 @@ function ReaderPage() {
                     {/* Chapter selector */}
                     <button
                         onClick={() => setShowChapterList(!showChapterList)}
-                        className="min-w-[100px] sm:min-w-[180px] h-8 sm:h-10 px-2 sm:px-4 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-xs sm:text-sm rounded flex items-center justify-center gap-1 sm:gap-2"
+                        className="min-w-[120px] sm:min-w-[180px] h-10 px-4 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-sm rounded flex items-center justify-center gap-2"
                     >
                         <span>Ch. {chapter.chapter_number}</span>
-                        <span className="text-[10px] sm:text-xs text-gray-500">/ {totalChapters}</span>
-                        <DownOutlined className="text-[10px] sm:text-xs" />
+                        <span className="text-xs text-gray-500">/ {totalChapters}</span>
+                        <DownOutlined className="text-xs" />
                     </button>
 
                     {/* Server Selector (Only if > 1 server) */}
@@ -282,10 +282,10 @@ function ReaderPage() {
                                     <>
                                         <div className="fixed inset-0 z-40" onClick={() => setShowServerList(false)} />
                                         <motion.div
-                                            className="absolute top-full mt-2 left-1/2 -translate-x-1/2 min-w-[150px] bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border shadow-xl rounded-lg overflow-hidden z-50 py-1"
-                                            initial={{ opacity: 0, y: -10 }}
+                                            className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 min-w-[150px] bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border shadow-xl rounded-lg overflow-hidden z-50 py-1"
+                                            initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: -10 }}
+                                            exit={{ opacity: 0, y: 10 }}
                                         >
                                             {servers.map((s, idx) => (
                                                 <button
@@ -311,7 +311,7 @@ function ReaderPage() {
                     <button
                         onClick={goToNextChapter}
                         disabled={!chapter.next_chapter}
-                        className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-gray-700 dark:text-white bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed rounded text-sm sm:text-base"
+                        className="w-10 h-10 flex items-center justify-center text-gray-700 dark:text-white bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed rounded text-base"
                         title="Chương sau"
                     >
                         <RightOutlined />
@@ -515,7 +515,7 @@ function ReaderPage() {
                 {showNav && (
                     <motion.button
                         onClick={() => setShowSettings(!showSettings)}
-                        className={`fixed bottom-10 right-4 w-12 h-12 rounded-full shadow-lg transition-colors flex items-center justify-center z-40 text-lg ${showSettings
+                        className={`fixed bottom-24 right-4 w-12 h-12 rounded-full shadow-lg transition-colors flex items-center justify-center z-40 text-lg ${showSettings
                             ? 'bg-primary text-white'
                             : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700'
                             }`}
