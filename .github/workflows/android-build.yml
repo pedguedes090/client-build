@@ -30,6 +30,9 @@ jobs:
         run: npm ci
 
       - name: Build Web Assets
+        env:
+          VITE_API_URL: "http://home.duongkum999.me:8081/api"
+          VITE_IMAGE_SERVER_URL: "https://serrverimg.duongkum999.me"
         run: npm run build
 
       - name: Sync Capacitor
