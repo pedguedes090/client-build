@@ -1,0 +1,15 @@
+{
+  "appId": "com.comic.client",
+  "appName": "Comic Client",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true,
+    "allowNavigation": [
+      "*"
+    ]
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}
