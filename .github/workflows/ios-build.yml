@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build iOS
@@ -59,3 +62,14 @@ jobs:
           name: ios-app-unsigned
           path: ios/App-unsigned.ipa
           retention-days: 5
+
+      - name: Publish to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: latest
+          name: Latest Build
+          files: ios/App-unsigned.ipa
+          draft: false
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
