@@ -31,9 +31,8 @@ jobs:
 
       - name: Build Unsigned Archive
         working-directory: ios
-        # CODE_SIGNING_ALLOWED=NO ensures we don't need valid certs to just build the binary
         run: |
-          xcodebuild -workspace App/App.xcworkspace \
+          xcodebuild -project App/App.xcodeproj \
             -scheme App \
             -configuration Release \
             -destination generic/platform=iOS \
