@@ -56,12 +56,12 @@ function Header() {
     return (
         <header className="sticky top-0 z-50">
             {/* Top bar */}
-            <div className="bg-primary dark:bg-[#5a3e85] py-2">
+            <div className="bg-primary dark:bg-[#5a3e85] pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))]">
                 <div className="max-w-7xl mx-auto px-3 sm:px-4 flex items-center justify-between gap-2 sm:gap-4">
                     {/* Mobile menu button */}
                     <button
                         onClick={() => setShowMobileMenu(true)}
-                        className="md:hidden text-white text-xl p-1 hover:text-yellow-300 transition-colors"
+                        className="md:hidden text-white text-2xl p-1 hover:text-yellow-300 transition-colors"
                         aria-label="Menu"
                     >
                         <MenuOutlined />
@@ -69,7 +69,7 @@ function Header() {
 
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-1.5 sm:gap-2 text-white font-bold text-base sm:text-lg">
-                        <BookOutlined className="text-lg sm:text-xl" />
+                        <BookOutlined className="text-xl sm:text-2xl" />
                         <span className="text-white">Truyện</span>
                         <span>Launch</span>
                     </Link>
@@ -92,11 +92,11 @@ function Header() {
                     {/* Right actions */}
                     <div className="flex items-center gap-2 sm:gap-3 text-white text-sm">
                         {/* Mobile search button */}
-                        <Link to="/search" className="sm:hidden text-lg p-1 hover:text-yellow-300 transition-colors">
+                        <Link to="/search" className="sm:hidden text-2xl p-1 hover:text-yellow-300 transition-colors">>
                             <SearchOutlined />
                         </Link>
 
-                        <button onClick={toggleTheme} className="hover:text-yellow-300 transition-colors text-lg" title="Chuyển theme">
+                        <button onClick={toggleTheme} className="hover:text-yellow-300 transition-colors text-xl" title="Chuyển theme">
                             {theme === 'dark' ? <SunOutlined /> : <MoonOutlined />}
                         </button>
 
@@ -221,7 +221,7 @@ function Header() {
                                 </Link>
                                 <button
                                     onClick={() => setShowMobileMenu(false)}
-                                    className="text-white text-xl p-1 hover:text-yellow-300 transition-colors"
+                                    className="text-white text-2xl p-1 hover:text-yellow-300 transition-colors"
                                 >
                                     <CloseOutlined />
                                 </button>
