@@ -30,12 +30,16 @@ api.interceptors.request.use((config) => {
 });
 
 // Helper to get admin auth header (JWT)
-function getAuthHeader() {
-    const token = localStorage.getItem('adminToken');
-    if (token) {
-        return { Authorization: `Bearer ${token}` };
-    }
-    return {};
+// Helper: Get Admin Token Header (Strict)
+export function getAdminAuthHeader() {
+    const adminToken = localStorage.getItem('adminToken');
+    return adminToken ? { Authorization: `Bearer ${adminToken}` } : {};
+}
+
+// Helper: Get User Token Header (Strict)
+export function getUserAuthHeader() {
+    const userToken = localStorage.getItem('authToken');
+    return userToken ? { Authorization: `Bearer ${userToken}` } : {};
 }
 
 // ============== AUTH API ==============
@@ -153,43 +157,49 @@ export function isAdminLoggedIn() {
     return !!localStorage.getItem('adminToken');
 }
 
-export const createComic = async (comic) => {
+export const createComic = async (comic, options = {}) => {
+    const headers = options.headers || getAdminAuthHeader();
     const response = await axios.post(`${API_BASE}/admin/comics`, comic, {
-        headers: getAuthHeader()
+        headers
     });
     return response.data;
 };
 
-export const updateComic = async (id, comic) => {
+export const updateComic = async (id, comic, options = {}) => {
+    const headers = options.headers || getAdminAuthHeader();
     const response = await axios.put(`${API_BASE}/admin/comics/${id}`, comic, {
-        headers: getAuthHeader()
+        headers
     });
     return response.data;
 };
 
-export const deleteComic = async (id) => {
+export const deleteComic = async (id, options = {}) => {
+    const headers = options.headers || getAdminAuthHeader();
     await axios.delete(`${API_BASE}/admin/comics/${id}`, {
-        headers: getAuthHeader()
+        headers
     });
 };
 
-export const createChapter = async (chapter) => {
+export const createChapter = async (chapter, options = {}) => {
+    const headers = options.headers || getAdminAuthHeader();
     const response = await axios.post(`${API_BASE}/admin/chapters`, chapter, {
-        headers: getAuthHeader()
+        headers
     });
     return response.data;
 };
 
-export const updateChapter = async (id, chapter) => {
+export const updateChapter = async (id, chapter, options = {}) => {
+    const headers = options.headers || getAdminAuthHeader();
     const response = await axios.put(`${API_BASE}/admin/chapters/${id}`, chapter, {
-        headers: getAuthHeader()
+        headers
     });
     return response.data;
 };
 
-export const deleteChapter = async (id) => {
+export const deleteChapter = async (id, options = {}) => {
+    const headers = options.headers || getAdminAuthHeader();
     await axios.delete(`${API_BASE}/admin/chapters/${id}`, {
-        headers: getAuthHeader()
+        headers
     });
 };
 
@@ -228,14 +238,16 @@ export function resolveImageUrl(url) {
 }
 
 // Upload cover image to Image Server
-export const uploadCoverImage = async (file, comicSlug, onProgress) => {
+export const uploadCoverImage = async (file, comicSlug, onProgress, options = {}) => {
     const formData = new FormData();
     formData.append('cover', file);
     formData.append('comic_slug', comicSlug);
 
+    const authHeaders = options.headers || getAdminAuthHeader();
+
     const response = await axios.post(`${IMAGE_SERVER_BASE}/upload/cover`, formData, {
         headers: {
-            ...getAuthHeader(),
+            ...authHeaders,
             'Content-Type': 'multipart/form-data'
         },
         onUploadProgress: (progressEvent) => {
@@ -249,7 +261,7 @@ export const uploadCoverImage = async (file, comicSlug, onProgress) => {
 };
 
 // Upload chapter images to Image Server
-export const uploadChapterImages = async (files, comicSlug, chapterNumber, onProgress) => {
+export const uploadChapterImages = async (files, comicSlug, chapterNumber, onProgress, options = {}) => {
     const formData = new FormData();
 
     // Sort files by name to maintain order
@@ -263,9 +275,11 @@ export const uploadChapterImages = async (files, comicSlug, chapterNumber, onPro
     formData.append('comic_slug', comicSlug);
     formData.append('chapter_number', chapterNumber.toString());
 
+    const authHeaders = options.headers || getAdminAuthHeader();
+
     const response = await axios.post(`${IMAGE_SERVER_BASE}/upload/chapter`, formData, {
         headers: {
-            ...getAuthHeader(),
+            ...authHeaders,
             'Content-Type': 'multipart/form-data'
         },
         onUploadProgress: (progressEvent) => {
@@ -279,18 +293,20 @@ export const uploadChapterImages = async (files, comicSlug, chapterNumber, onPro
 };
 
 // Get storage stats from Image Server
-export const getImageServerStats = async () => {
+export const getImageServerStats = async (options = {}) => {
+    const headers = options.headers || getAdminAuthHeader();
     const response = await axios.get(`${IMAGE_SERVER_BASE}/stats`, {
-        headers: getAuthHeader()
+        headers
     });
     return response.data;
 };
 
 // Delete chapter images from Image Server
-export const deleteChapterImages = async (comicSlug, chapterNumber) => {
+export const deleteChapterImages = async (comicSlug, chapterNumber, options = {}) => {
+    const headers = options.headers || getAdminAuthHeader();
     const response = await axios.delete(
         `${IMAGE_SERVER_BASE}/chapters/${comicSlug}/${chapterNumber}`,
-        { headers: getAuthHeader() }
+        { headers }
     );
     return response.data;
 };
@@ -298,61 +314,69 @@ export const deleteChapterImages = async (comicSlug, chapterNumber) => {
 // ============== IMAGE BROWSER API ==============
 
 // Browse folder
-export const browseImages = async (folderPath = '') => {
+export const browseImages = async (folderPath = '', options = {}) => {
     const url = folderPath
         ? `${IMAGE_SERVER_BASE}/browse/${folderPath.replace(/^\/+/, '')}`
         : `${IMAGE_SERVER_BASE}/browse`;
-    const response = await axios.get(url, { headers: getAuthHeader() });
+
+    const headers = options.headers || getAdminAuthHeader();
+    const response = await axios.get(url, { headers });
     return response.data;
 };
 
 // Create folder
-export const createFolder = async (folderPath) => {
+export const createFolder = async (folderPath, options = {}) => {
+    const headers = options.headers || getAdminAuthHeader();
     const response = await axios.post(
         `${IMAGE_SERVER_BASE}/folder`,
         { path: folderPath },
-        { headers: getAuthHeader() }
+        { headers }
     );
     return response.data;
 };
 
 // Delete folder
-export const deleteFolder = async (folderPath) => {
+export const deleteFolder = async (folderPath, options = {}) => {
+    const headers = options.headers || getAdminAuthHeader();
     const response = await axios.delete(
         `${IMAGE_SERVER_BASE}/folder/${folderPath.replace(/^\/+/, '')}`,
-        { headers: getAuthHeader() }
+        { headers }
     );
     return response.data;
 };
 
 // Delete image
-export const deleteImage = async (imagePath) => {
+export const deleteImage = async (imagePath, options = {}) => {
+    const headers = options.headers || getAdminAuthHeader();
     const response = await axios.delete(
         `${IMAGE_SERVER_BASE}/images/${imagePath.replace(/^\/+/, '')}`,
-        { headers: getAuthHeader() }
+        { headers }
     );
     return response.data;
 };
 
 // Rename file or folder
-export const renameItem = async (oldPath, newName) => {
+export const renameItem = async (oldPath, newName, options = {}) => {
+    const headers = options.headers || getAdminAuthHeader();
     const response = await axios.put(
         `${IMAGE_SERVER_BASE}/rename`,
         { oldPath, newName },
-        { headers: getAuthHeader() }
+        { headers }
     );
     return response.data;
 };
 
 // Upload images to specific folder
-export const uploadToFolder = async (files, folderPath, onProgress) => {
+export const uploadToFolder = async (files, folderPath, onProgress, options = {}) => {
     const formData = new FormData();
     files.forEach(file => formData.append('images', file));
     formData.append('folder_path', folderPath);
 
+    const authHeaders = options.headers || getAdminAuthHeader();
+
     const response = await axios.post(`${IMAGE_SERVER_BASE}/upload/to-folder`, formData, {
         headers: {
-            ...getAuthHeader(),
+            ...authHeaders,
             'Content-Type': 'multipart/form-data'
         },
         onUploadProgress: (progressEvent) => {
@@ -366,16 +390,18 @@ export const uploadToFolder = async (files, folderPath, onProgress) => {
 };
 
 // Replace image
-export const replaceImage = async (imagePath, file, onProgress) => {
+export const replaceImage = async (imagePath, file, onProgress, options = {}) => {
     const formData = new FormData();
     formData.append('image', file);
+
+    const authHeaders = options.headers || getAdminAuthHeader();
 
     const response = await axios.put(
         `${IMAGE_SERVER_BASE}/replace/${imagePath.replace(/^\/+/, '')}`,
         formData,
         {
             headers: {
-                ...getAuthHeader(),
+                ...authHeaders,
                 'Content-Type': 'multipart/form-data'
             },
             onUploadProgress: (progressEvent) => {
