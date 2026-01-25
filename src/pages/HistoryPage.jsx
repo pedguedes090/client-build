@@ -4,76 +4,40 @@ import { HistoryOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icon
 import { PLACEHOLDER_SMALL } from '../constants/placeholders';
 import { formatTimeAgo } from '../utils/formatters';
 import { resolveImageUrl } from '../api';
-import { useAuth } from '../context/AuthContext';
-import { getHistory } from '../api/user';
 
 function HistoryPage() {
-    const { user } = useAuth();
     const [history, setHistory] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function loadHistory() {
-            setLoading(true);
-            if (user) {
-                try {
-                    const data = await getHistory(100);
-                    // Map API response to match localStorage format if needed, or unify formats
-                    // API returns: { comic_id, comic_title, comic_slug, cover_url, chapter_id, chapter_number, last_read_at }
-                    // UI expects: { comicId, comicTitle, comicSlug, coverUrl, chapterNumber, timestamp }
-                    const formatted = data.map(h => ({
-                        comicId: h.comic_id,
-                        comicTitle: h.comic_title,
-                        comicSlug: h.comic_slug,
-                        coverUrl: h.cover_url,
-                        chapterId: h.chapter_id,
-                        chapterNumber: h.chapter_number,
-                        timestamp: new Date(h.last_read_at).getTime()
-                    }));
-                    setHistory(formatted);
-                } catch (error) {
-                    console.error('Failed to load history', error);
-                }
-            } else {
-                const saved = JSON.parse(localStorage.getItem('readingHistory') || '[]');
-                setHistory(saved);
-            }
-            setLoading(false);
-        }
-        loadHistory();
-    }, [user]);
+        const saved = JSON.parse(localStorage.getItem('readingHistory') || '[]');
+        setHistory(saved);
+    }, []);
+
+
 
     function clearHistory() {
         if (window.confirm('Xóa toàn bộ lịch sử đọc?')) {
-            if (user) {
-                alert('Tính năng xóa tất cả lịch sử chưa hỗ trợ cho tài khoản đăng nhập.');
-            } else {
-                localStorage.removeItem('readingHistory');
-                setHistory([]);
-            }
+            localStorage.removeItem('readingHistory');
+            setHistory([]);
         }
     }
 
     function removeItem(comicId) {
-        if (user) {
-            alert('Tính năng xóa từng truyện chưa hỗ trợ cho tài khoản đăng nhập (đang cập nhật).');
-            return;
-        }
         const updated = history.filter(h => h.comicId !== comicId);
         localStorage.setItem('readingHistory', JSON.stringify(updated));
         setHistory(updated);
     }
 
     return (
-        <main className="max-w-7xl mx-auto px-4 py-6 mb-16 md:mb-0">
-            <div className="bg-white dark:bg-dark-card p-4 shadow-sm dark:shadow-none rounded-lg">
+        <main className="max-w-7xl mx-auto px-4 py-6">
+            <div className="bg-white dark:bg-dark-card p-4 shadow-sm dark:shadow-none">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                         <HistoryOutlined className="text-primary text-lg" />
                         <h1 className="text-base font-semibold text-primary">Lịch sử đọc truyện</h1>
                         <span className="text-xs text-gray-500">({history.length} truyện)</span>
                     </div>
-                    {history.length > 0 && !user && (
+                    {history.length > 0 && (
                         <button
                             onClick={clearHistory}
                             className="px-3 py-1 text-xs bg-gray-200 dark:bg-dark-tertiary text-gray-600 dark:text-gray-400 hover:text-red-400 transition-colors flex items-center gap-1"
@@ -83,9 +47,7 @@ function HistoryPage() {
                     )}
                 </div>
 
-                {loading ? (
-                    <div className="py-12 text-center text-gray-500">Đang tải...</div>
-                ) : history.length === 0 ? (
+                {history.length === 0 ? (
                     <div className="py-12 text-center">
                         <p className="text-gray-400 mb-2">Chưa có lịch sử đọc truyện</p>
                         <Link to="/" className="text-sm text-primary hover:underline">Khám phá truyện mới →</Link>
@@ -93,13 +55,13 @@ function HistoryPage() {
                 ) : (
                     <div className="space-y-2">
                         {history.map((item) => (
-                            <div key={item.comicId} className="flex items-center gap-3 p-2 bg-gray-50 dark:bg-dark-secondary hover:bg-gray-100 dark:hover:bg-dark-tertiary transition-colors group rounded-md">
+                            <div key={item.comicId} className="flex items-center gap-3 p-2 bg-gray-50 dark:bg-dark-secondary hover:bg-gray-100 dark:hover:bg-dark-tertiary transition-colors group">
                                 {/* Cover */}
                                 <Link to={`/truyen/${item.comicSlug}`} className="flex-shrink-0">
                                     <img
                                         src={resolveImageUrl(item.coverUrl) || PLACEHOLDER_SMALL}
                                         alt={item.comicTitle}
-                                        className="w-12 h-16 object-cover rounded"
+                                        className="w-12 h-16 object-cover"
                                     />
                                 </Link>
 
@@ -117,20 +79,18 @@ function HistoryPage() {
                                         >
                                             Đọc tiếp Chương {item.chapterNumber} →
                                         </Link>
-                                        <span className="text-[10px] text-gray-600 dark:text-gray-500">• {formatTimeAgo(item.timestamp)}</span>
+                                        <span className="text-[10px] text-gray-600">• {formatTimeAgo(item.timestamp)}</span>
                                     </div>
                                 </div>
 
-                                {/* Remove button (only guest for now) */}
-                                {!user && (
-                                    <button
-                                        onClick={() => removeItem(item.comicId)}
-                                        className="p-1 text-gray-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all"
-                                        title="Xóa khỏi lịch sử"
-                                    >
-                                        ✕
-                                    </button>
-                                )}
+                                {/* Remove button */}
+                                <button
+                                    onClick={() => removeItem(item.comicId)}
+                                    className="p-1 text-gray-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all"
+                                    title="Xóa khỏi lịch sử"
+                                >
+                                    ✕
+                                </button>
                             </div>
                         ))}
                     </div>
