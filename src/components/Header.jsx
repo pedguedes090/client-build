@@ -92,7 +92,7 @@ function Header() {
                     {/* Right actions */}
                     <div className="flex items-center gap-2 sm:gap-3 text-white text-sm">
                         {/* Mobile search button */}
-                        <Link to="/search" className="sm:hidden text-2xl p-1 hover:text-yellow-300 transition-colors">>
+                        <Link to="/search" className="sm:hidden text-2xl p-1 hover:text-yellow-300 transition-colors">
                             <SearchOutlined />
                         </Link>
 
