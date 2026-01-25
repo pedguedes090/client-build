@@ -56,7 +56,7 @@ function Header() {
     return (
         <header className="sticky top-0 z-50">
             {/* Top bar */}
-            <div className="bg-primary dark:bg-[#5a3e85] pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))]">
+            <div className="bg-primary dark:bg-[#5a3e85] pb-1 pt-[calc(0.25rem+env(safe-area-inset-top))]">
                 <div className="max-w-7xl mx-auto px-3 sm:px-4 flex items-center justify-between gap-2 sm:gap-4">
                     {/* Mobile menu button */}
                     <button
