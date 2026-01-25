@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getChapter, getChapterBySlugAndNumber, getComic, getComicBySlug, getChapters, resolveImageUrl, slugify } from '../api';
+import { updateHistory } from '../api/user';
+import { useAuth } from '../context/AuthContext';
 import CanvasImage from '../components/CanvasImage';
 import {
     LeftOutlined,
@@ -22,6 +24,7 @@ import {
 function ReaderPage() {
     const { id, slug, number } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [chapter, setChapter] = useState(null);
     const [comic, setComic] = useState(null);
     const [allChapters, setAllChapters] = useState([]);
@@ -120,6 +123,10 @@ function ReaderPage() {
         }
         history.unshift(entry);
         localStorage.setItem('readingHistory', JSON.stringify(history.slice(0, 50)));
+
+        if (user) {
+            updateHistory(comicData.id, chapterData.id);
+        }
     }
 
     const goToPrevChapter = useCallback(() => {
