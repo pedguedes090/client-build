@@ -50,7 +50,7 @@ jobs:
           ANDROID_KEYSTORE_FILE: release-key.jks
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" > app/release-key.jks.base64
-          base64 -d app/release-key.jks.base64 > app/release-key.jks
+          tr -d '\r\n ' < app/release-key.jks.base64 | base64 --decode > app/release-key.jks
           chmod +x gradlew
           ./gradlew assembleRelease
 

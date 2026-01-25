@@ -147,3 +147,6 @@ ios/*.xcarchive
 .vscode/
 *.swp
 *.swo
+
+# Secrets instructions
+GITHUB_SECRETS_SETUP.md
