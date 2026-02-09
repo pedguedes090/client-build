@@ -42,69 +42,87 @@ function RegisterPage() {
     return (
         <main className="min-h-[80vh] flex items-center justify-center px-4">
             <div className="w-full max-w-md">
-                <div className="bg-white dark:bg-dark-card p-8 shadow-lg dark:shadow-none">
+                <div className="bg-white dark:bg-dark-card p-6 sm:p-8 shadow-lg dark:shadow-none rounded-xl">
                     <div className="text-center mb-6">
                         <h1 className="text-2xl font-bold text-primary mb-2">Đăng ký</h1>
                         <p className="text-sm text-gray-500">Tạo tài khoản để lưu tiến độ đọc</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1">Tên người dùng</label>
+                            <label htmlFor="register-username" className="form-label">Tên người dùng</label>
                             <input
+                                id="register-username"
                                 type="text"
-                                className="w-full px-4 py-2.5 bg-gray-100 dark:bg-dark-tertiary border border-gray-200 dark:border-dark-border text-gray-800 dark:text-gray-200 outline-none focus:border-primary transition-colors"
+                                autoComplete="username"
+                                className="form-input"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 placeholder="username"
                                 required
+                                aria-required="true"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1">Email</label>
+                            <label htmlFor="register-email" className="form-label">Email</label>
                             <input
+                                id="register-email"
                                 type="email"
-                                className="w-full px-4 py-2.5 bg-gray-100 dark:bg-dark-tertiary border border-gray-200 dark:border-dark-border text-gray-800 dark:text-gray-200 outline-none focus:border-primary transition-colors"
+                                autoComplete="email"
+                                inputMode="email"
+                                className="form-input"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="your@email.com"
                                 required
+                                aria-required="true"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1">Mật khẩu</label>
+                            <label htmlFor="register-password" className="form-label">Mật khẩu</label>
                             <input
+                                id="register-password"
                                 type="password"
-                                className="w-full px-4 py-2.5 bg-gray-100 dark:bg-dark-tertiary border border-gray-200 dark:border-dark-border text-gray-800 dark:text-gray-200 outline-none focus:border-primary transition-colors"
+                                autoComplete="new-password"
+                                className="form-input"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
+                                minLength={6}
                                 required
+                                aria-required="true"
+                                aria-describedby="password-hint"
                             />
+                            <p id="password-hint" className="text-[11px] text-gray-400 mt-1">Tối thiểu 6 ký tự</p>
                         </div>
 
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1">Xác nhận mật khẩu</label>
+                            <label htmlFor="register-confirm" className="form-label">Xác nhận mật khẩu</label>
                             <input
+                                id="register-confirm"
                                 type="password"
-                                className="w-full px-4 py-2.5 bg-gray-100 dark:bg-dark-tertiary border border-gray-200 dark:border-dark-border text-gray-800 dark:text-gray-200 outline-none focus:border-primary transition-colors"
+                                autoComplete="new-password"
+                                className="form-input"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 placeholder="••••••••"
                                 required
+                                aria-required="true"
                             />
                         </div>
 
                         {error && (
-                            <p className="text-red-400 text-sm">{error}</p>
+                            <div role="alert" className="text-red-500 text-sm bg-red-50 dark:bg-red-900/20 p-3 rounded-lg">
+                                {error}
+                            </div>
                         )}
 
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-2.5 bg-primary text-white font-medium hover:bg-primary-hover transition-colors disabled:opacity-50"
+                            className="btn-mobile w-full bg-primary text-white font-medium rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50"
                         >
                             {loading ? 'Đang xử lý...' : 'Đăng ký'}
                         </button>
@@ -113,7 +131,7 @@ function RegisterPage() {
                     <div className="mt-6 text-center">
                         <p className="text-sm text-gray-500">
                             Đã có tài khoản?{' '}
-                            <Link to="/login" className="text-primary hover:underline">
+                            <Link to="/login" className="text-primary font-medium hover:underline">
                                 Đăng nhập
                             </Link>
                         </p>

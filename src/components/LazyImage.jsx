@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, memo } from 'react';
 
 // Tiny placeholder (1x1 gray pixel as base64 data URI)
 const BLUR_PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 4"%3E%3Crect fill="%23374151" width="3" height="4"/%3E%3C/svg%3E';
@@ -8,8 +8,9 @@ const BLUR_PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/200
  * - Native lazy loading
  * - Smooth fade-in animation when loaded
  * - Error fallback
+ * - content-visibility for off-screen rendering optimization
  */
-export default function LazyImage({
+const LazyImage = memo(function LazyImage({
     src,
     alt,
     className = '',
@@ -31,7 +32,7 @@ export default function LazyImage({
     const displaySrc = error ? fallback : src;
 
     return (
-        <div className={`relative overflow-hidden bg-gray-200 dark:bg-dark-tertiary ${className}`}>
+        <div className={`relative overflow-hidden bg-gray-200 dark:bg-dark-tertiary content-auto ${className}`}>
             <img
                 src={displaySrc}
                 alt={alt}
@@ -44,13 +45,15 @@ export default function LazyImage({
             />
         </div>
     );
-}
+});
+
+export default LazyImage;
 
 /**
  * Simple lazy image without placeholder animation
  * Just uses native loading="lazy" with intersection observer preload
  */
-export function SimpleLazyImage({ src, alt, className = '', fallback, ...props }) {
+export const SimpleLazyImage = memo(function SimpleLazyImage({ src, alt, className = '', fallback, ...props }) {
     const [error, setError] = useState(false);
 
     return (
@@ -64,4 +67,4 @@ export function SimpleLazyImage({ src, alt, className = '', fallback, ...props }
             {...props}
         />
     );
-}
+});

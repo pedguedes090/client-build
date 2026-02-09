@@ -43,8 +43,12 @@ function HistoryPage() {
 
                 {history.length === 0 ? (
                     <div className="py-12 text-center">
+                        <HistoryOutlined className="text-4xl text-gray-300 dark:text-gray-600 mb-3" />
                         <p className="text-gray-400 mb-2">Chưa có lịch sử đọc truyện</p>
-                        <Link to="/" className="text-sm text-primary hover:underline">Khám phá truyện mới →</Link>
+                        <p className="text-sm text-gray-500 mb-4">Bắt đầu đọc truyện để xem lịch sử tại đây</p>
+                        <Link to="/" className="px-4 py-2 bg-primary text-white text-sm font-medium rounded hover:bg-primary-hover transition-colors inline-block">
+                            Khám phá truyện mới →
+                        </Link>
                     </div>
                 ) : (
                     <div className="space-y-2">

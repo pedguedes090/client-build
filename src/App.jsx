@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-ro
 import { useState, useEffect, createContext, Suspense, lazy } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
+import BottomNav from './components/BottomNav';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
@@ -61,24 +62,27 @@ function AppContent() {
     return (
         <div className="min-h-screen">
             {!isReaderPage && <Header />}
-            <Suspense fallback={<PageLoader />}>
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/truyen/:slug" element={<ComicPage />} />
-                    <Route path="/truyen/:slug/chuong/:number" element={<ReaderPage />} />
-                    {/* Legacy routes - redirect to new format */}
-                    <Route path="/comic/:id" element={<ComicPage />} />
-                    <Route path="/read/:id" element={<ReaderPage />} />
-                    <Route path="/search" element={<SearchPage />} />
-                    <Route path="/history" element={<HistoryPage />} />
-                    <Route path="/adminaddct" element={<AdminPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/genres" element={<GenresPage />} />
-                    <Route path="/favorites" element={<FavoritesPage />} />
-                    <Route path="/following" element={<FollowingPage />} />
-                </Routes>
-            </Suspense>
+            <div className={!isReaderPage ? 'pb-bottom-nav' : ''}>
+                <Suspense fallback={<PageLoader />}>
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/truyen/:slug" element={<ComicPage />} />
+                        <Route path="/truyen/:slug/chuong/:number" element={<ReaderPage />} />
+                        {/* Legacy routes - redirect to new format */}
+                        <Route path="/comic/:id" element={<ComicPage />} />
+                        <Route path="/read/:id" element={<ReaderPage />} />
+                        <Route path="/search" element={<SearchPage />} />
+                        <Route path="/history" element={<HistoryPage />} />
+                        <Route path="/adminaddct" element={<AdminPage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/register" element={<RegisterPage />} />
+                        <Route path="/genres" element={<GenresPage />} />
+                        <Route path="/favorites" element={<FavoritesPage />} />
+                        <Route path="/following" element={<FollowingPage />} />
+                    </Routes>
+                </Suspense>
+            </div>
+            {!isReaderPage && <BottomNav />}
         </div>
     );
 }

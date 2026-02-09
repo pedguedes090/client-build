@@ -80,6 +80,11 @@
         @apply min-h-[44px] min-w-[44px];
     }
 
+    /* content-visibility optimization for off-screen images */
+    .content-auto {
+        content-visibility: auto;
+    }
+
     /* Improved button for mobile */
     .btn-mobile {
         @apply px-3 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 inline-flex items-center justify-center gap-2 min-h-[44px];
@@ -145,6 +150,42 @@
 @media (max-width: 640px) {
     .animate-marquee {
         animation: marquee 20s linear infinite;
+    }
+}
+
+/* CSS-based card entrance animation (replaces per-item framer-motion for perf) */
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.comic-card-enter {
+    animation: cardFadeIn 0.3s ease-out both;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .comic-card-enter {
+        animation: none;
+        opacity: 1;
+    }
+
+    .animate-marquee {
+        animation: none;
+    }
+}
+
+/* Bottom nav spacing for mobile */
+@media (max-width: 767px) {
+    .pb-bottom-nav {
+        padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
     }
 }
 

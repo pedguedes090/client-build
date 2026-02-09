@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ComicCard, ComicCardWithChapters } from '../components/ComicCard';
+import { ComicGridSkeleton, FeaturedCarouselSkeleton, RankingSkeleton } from '../components/SkeletonLoader';
 import RankingList from '../components/RankingList';
 import { getRecentComics, getTopComics, getFeaturedComics, resolveImageUrl, prefetchRecentComics } from '../api';
 import { useHistory } from '../hooks/useHistory';
@@ -104,9 +104,29 @@ function HomePage() {
 
     if (loading && page === 1) {
         return (
-            <div className="flex items-center justify-center min-h-[50vh]">
-                <div className="w-10 h-10 border-4 border-gray-200 dark:border-dark-tertiary border-t-primary rounded-full animate-spin" />
-            </div>
+            <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 sm:gap-6">
+                    <div className="space-y-4 sm:space-y-6">
+                        <section>
+                            <div className="flex items-center gap-2 mb-3">
+                                <FireOutlined className="text-primary text-lg sm:text-xl" />
+                                <h2 className="text-sm sm:text-base font-semibold text-primary">Truyện đề cử</h2>
+                            </div>
+                            <FeaturedCarouselSkeleton />
+                        </section>
+                        <section>
+                            <div className="flex items-center gap-2 mb-3">
+                                <SyncOutlined className="text-primary text-lg sm:text-xl" />
+                                <h2 className="text-sm sm:text-base font-semibold text-primary">Truyện mới cập nhật</h2>
+                            </div>
+                            <ComicGridSkeleton count={12} />
+                        </section>
+                    </div>
+                    <aside className="space-y-6 hidden lg:block">
+                        <RankingSkeleton />
+                    </aside>
+                </div>
+            </main>
         );
     }
 
