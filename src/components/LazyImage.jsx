@@ -32,8 +32,7 @@ const LazyImage = memo(function LazyImage({
     const displaySrc = error ? fallback : src;
 
     return (
-        <div className={`relative overflow-hidden bg-gray-200 dark:bg-dark-tertiary ${className}`}
-             style={{ contentVisibility: 'auto' }}>
+        <div className={`relative overflow-hidden bg-gray-200 dark:bg-dark-tertiary content-auto ${className}`}>
             <img
                 src={displaySrc}
                 alt={alt}

@@ -12,7 +12,7 @@ export const ComicCard = memo(function ComicCard({ comic, showBadge = false, ind
     return (
         <div
             className="comic-card-enter hover:-translate-y-1 transition-transform duration-200"
-            style={{ animationDelay: `${index * 40}ms` }}
+            style={index < 20 ? { animationDelay: `${Math.min(index * 40, 500)}ms` } : undefined}
         >
             <Link to={`/truyen/${comic.slug || slugify(comic.title)}`} className="group block">
                 <div className={`relative overflow-hidden rounded-lg ${compact ? 'aspect-[3/4] mb-1.5' : 'aspect-[3/4] mb-2'}`}>
@@ -43,7 +43,7 @@ export const ComicCardWithChapters = memo(function ComicCardWithChapters({ comic
     return (
         <div
             className="comic-card-enter bg-white dark:bg-dark-card rounded-lg overflow-hidden hover:ring-1 hover:ring-primary/50 hover:-translate-y-1 transition-all duration-200 shadow-sm dark:shadow-none"
-            style={{ animationDelay: `${index * 40}ms` }}
+            style={index < 20 ? { animationDelay: `${Math.min(index * 40, 500)}ms` } : undefined}
         >
             {/* Image - clickable to comic page */}
             <Link to={`/truyen/${comic.slug || slugify(comic.title)}`} className="block relative aspect-[3/4] overflow-hidden">

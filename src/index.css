@@ -80,6 +80,11 @@
         @apply min-h-[44px] min-w-[44px];
     }
 
+    /* content-visibility optimization for off-screen images */
+    .content-auto {
+        content-visibility: auto;
+    }
+
     /* Improved button for mobile */
     .btn-mobile {
         @apply px-3 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 inline-flex items-center justify-center gap-2 min-h-[44px];
