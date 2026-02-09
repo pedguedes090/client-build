@@ -1,5 +1,5 @@
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { PLACEHOLDER_COVER } from '../constants/placeholders';
 import { resolveImageUrl, slugify } from '../api';
 import { formatTimeAgo } from '../utils/formatters';
@@ -7,17 +7,13 @@ import LazyImage from './LazyImage';
 
 
 // Vertical card for Featured section (no chapters)
-export function ComicCard({ comic, showBadge = false, index = 0, compact = false }) {
-    const CardWrapper = compact ? 'div' : motion.div;
-    const wrapperProps = compact ? {} : {
-        initial: { opacity: 0, y: 20 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.3, delay: index * 0.05 },
-        whileHover: { y: -4 }
-    };
-
+// Uses CSS fade-in animation instead of per-item framer-motion for better scroll perf
+export const ComicCard = memo(function ComicCard({ comic, showBadge = false, index = 0, compact = false }) {
     return (
-        <CardWrapper {...wrapperProps}>
+        <div
+            className="comic-card-enter hover:-translate-y-1 transition-transform duration-200"
+            style={{ animationDelay: `${index * 40}ms` }}
+        >
             <Link to={`/truyen/${comic.slug || slugify(comic.title)}`} className="group block">
                 <div className={`relative overflow-hidden rounded-lg ${compact ? 'aspect-[3/4] mb-1.5' : 'aspect-[3/4] mb-2'}`}>
                     <LazyImage
@@ -37,19 +33,17 @@ export function ComicCard({ comic, showBadge = false, index = 0, compact = false
                 </h3>
                 {!compact && <p className="text-[10px] text-gray-500 mt-0.5">{comic.author || 'Updating...'}</p>}
             </Link>
-        </CardWrapper>
+        </div>
     );
-}
+});
 
 // Vertical card with chapters below image (TruyenDex style)
-export function ComicCardWithChapters({ comic, index = 0 }) {
+// Uses CSS fade-in animation instead of per-item framer-motion for better scroll perf
+export const ComicCardWithChapters = memo(function ComicCardWithChapters({ comic, index = 0 }) {
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.05 }}
-            whileHover={{ y: -4 }}
-            className="bg-white dark:bg-dark-card rounded-lg overflow-hidden hover:ring-1 hover:ring-primary/50 transition-all shadow-sm dark:shadow-none"
+        <div
+            className="comic-card-enter bg-white dark:bg-dark-card rounded-lg overflow-hidden hover:ring-1 hover:ring-primary/50 hover:-translate-y-1 transition-all duration-200 shadow-sm dark:shadow-none"
+            style={{ animationDelay: `${index * 40}ms` }}
         >
             {/* Image - clickable to comic page */}
             <Link to={`/truyen/${comic.slug || slugify(comic.title)}`} className="block relative aspect-[3/4] overflow-hidden">
@@ -91,10 +85,8 @@ export function ComicCardWithChapters({ comic, index = 0 }) {
                     )}
                 </div>
             </div>
-        </motion.div>
+        </div>
     );
-}
+});
 
 export default ComicCard;
-
-

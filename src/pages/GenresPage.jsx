@@ -40,7 +40,9 @@ function GenresPage() {
 
                 {genres.length === 0 ? (
                     <div className="py-12 text-center">
-                        <p className="text-gray-400">Chưa có thể loại nào</p>
+                        <AppstoreOutlined className="text-4xl text-gray-300 dark:text-gray-600 mb-3" />
+                        <p className="text-gray-400 mb-2">Chưa có thể loại nào</p>
+                        <p className="text-sm text-gray-500">Thể loại sẽ xuất hiện khi có truyện được thêm vào hệ thống</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">

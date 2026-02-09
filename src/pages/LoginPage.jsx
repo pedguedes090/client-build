@@ -32,45 +32,54 @@ function LoginPage() {
     return (
         <main className="min-h-[80vh] flex items-center justify-center px-4">
             <div className="w-full max-w-md">
-                <div className="bg-white dark:bg-dark-card p-8 shadow-lg dark:shadow-none">
+                <div className="bg-white dark:bg-dark-card p-6 sm:p-8 shadow-lg dark:shadow-none rounded-xl">
                     <div className="text-center mb-6">
                         <h1 className="text-2xl font-bold text-primary mb-2">Đăng nhập</h1>
                         <p className="text-sm text-gray-500">Chào mừng bạn trở lại!</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1">Email</label>
+                            <label htmlFor="login-email" className="form-label">Email</label>
                             <input
+                                id="login-email"
                                 type="email"
-                                className="w-full px-4 py-2.5 bg-gray-100 dark:bg-dark-tertiary border border-gray-200 dark:border-dark-border text-gray-800 dark:text-gray-200 outline-none focus:border-primary transition-colors"
+                                autoComplete="email"
+                                inputMode="email"
+                                className="form-input"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="your@email.com"
                                 required
+                                aria-required="true"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1">Mật khẩu</label>
+                            <label htmlFor="login-password" className="form-label">Mật khẩu</label>
                             <input
+                                id="login-password"
                                 type="password"
-                                className="w-full px-4 py-2.5 bg-gray-100 dark:bg-dark-tertiary border border-gray-200 dark:border-dark-border text-gray-800 dark:text-gray-200 outline-none focus:border-primary transition-colors"
+                                autoComplete="current-password"
+                                className="form-input"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
                                 required
+                                aria-required="true"
                             />
                         </div>
 
                         {error && (
-                            <p className="text-red-400 text-sm">{error}</p>
+                            <div role="alert" className="text-red-500 text-sm bg-red-50 dark:bg-red-900/20 p-3 rounded-lg">
+                                {error}
+                            </div>
                         )}
 
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-2.5 bg-primary text-white font-medium hover:bg-primary-hover transition-colors disabled:opacity-50"
+                            className="btn-mobile w-full bg-primary text-white font-medium rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50"
                         >
                             {loading ? 'Đang xử lý...' : 'Đăng nhập'}
                         </button>
@@ -79,7 +88,7 @@ function LoginPage() {
                     <div className="mt-6 text-center">
                         <p className="text-sm text-gray-500">
                             Chưa có tài khoản?{' '}
-                            <Link to="/register" className="text-primary hover:underline">
+                            <Link to="/register" className="text-primary font-medium hover:underline">
                                 Đăng ký ngay
                             </Link>
                         </p>

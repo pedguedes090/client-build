@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ComicCard } from '../components/ComicCard';
+import { ComicGridSkeleton } from '../components/SkeletonLoader';
 import { getComics, getTopComics, getRecentComics, getComicsByGenre, getGenres } from '../api';
 import { SearchOutlined, FireOutlined, ClockCircleOutlined, CloseCircleOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
@@ -18,6 +18,7 @@ function SearchPage() {
     const [searchValue, setSearchValue] = useState(query);
     const [totalCount, setTotalCount] = useState(0);
     const LIMIT = 24;
+    const debounceRef = useRef(null);
 
     // Calculate total pages
     const totalPages = Math.ceil(totalCount / LIMIT);
@@ -86,6 +87,19 @@ function SearchPage() {
         setSearchParams(params);
     }
 
+    // Debounced live search as user types
+    const handleSearchInputChange = useCallback((value) => {
+        setSearchValue(value);
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => {
+            const params = {};
+            if (value.trim()) params.q = value.trim();
+            if (sort) params.sort = sort;
+            if (genre) params.genre = genre;
+            setSearchParams(params);
+        }, 400);
+    }, [sort, genre, setSearchParams]);
+
     function handleGenreClick(g) {
         setSearchParams({ genre: g });
     }
@@ -141,7 +155,7 @@ function SearchPage() {
                         className="flex-1 px-3 py-2 bg-gray-100 dark:bg-dark-tertiary border border-gray-200 dark:border-dark-border text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-primary"
                         placeholder="Nhập tên truyện hoặc tác giả..."
                         value={searchValue}
-                        onChange={(e) => setSearchValue(e.target.value)}
+                        onChange={(e) => handleSearchInputChange(e.target.value)}
                     />
                     <button type="submit" className="px-4 py-2 bg-primary text-white text-sm font-medium hover:bg-primary-hover">
                         Tìm
@@ -208,9 +222,7 @@ function SearchPage() {
                 )}
 
                 {loading ? (
-                    <div className="flex justify-center py-12">
-                        <div className="w-10 h-10 border-4 border-gray-200 dark:border-dark-tertiary border-t-primary rounded-full animate-spin" />
-                    </div>
+                    <ComicGridSkeleton count={24} columns="grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6" />
                 ) : comics.length > 0 ? (
                     <>
                         <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3">
@@ -283,8 +295,20 @@ function SearchPage() {
                     </>
                 ) : (
                     <div className="py-12 text-center">
+                        <SearchOutlined className="text-4xl text-gray-300 dark:text-gray-600 mb-3" />
                         <p className="text-gray-400 mb-2">Không tìm thấy truyện nào</p>
-                        <p className="text-sm text-gray-600">Thử tìm với từ khóa khác</p>
+                        <p className="text-sm text-gray-500 mb-4">Thử tìm với từ khóa khác hoặc duyệt theo thể loại</p>
+                        <div className="flex gap-2 justify-center">
+                            <Link to="/genres" className="px-4 py-2 bg-primary text-white text-sm font-medium rounded hover:bg-primary-hover transition-colors">
+                                Duyệt thể loại
+                            </Link>
+                            <button
+                                onClick={clearFilters}
+                                className="px-4 py-2 bg-gray-200 dark:bg-dark-tertiary text-gray-700 dark:text-gray-300 text-sm font-medium rounded hover:bg-gray-300 dark:hover:bg-dark-secondary transition-colors"
+                            >
+                                Xóa bộ lọc
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

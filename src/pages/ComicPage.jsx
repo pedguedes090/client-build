@@ -6,6 +6,7 @@ import { useFavorites } from '../hooks/useFavorites';
 import { useFollow } from '../hooks/useFollow';
 import { HeartOutlined, HeartFilled, PushpinOutlined, PushpinFilled } from '@ant-design/icons';
 import { PLACEHOLDER_COVER } from '../constants/placeholders';
+import { ComicDetailSkeleton } from '../components/SkeletonLoader';
 
 function ComicPage() {
     const { id, slug } = useParams();
@@ -57,16 +58,18 @@ function ComicPage() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-[50vh]">
-                <div className="w-10 h-10 border-4 border-gray-200 dark:border-dark-tertiary border-t-primary rounded-full animate-spin" />
-            </div>
+            <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
+                <ComicDetailSkeleton />
+            </main>
         );
     }
 
     if (!comic) {
         return (
             <div className="max-w-7xl mx-auto px-4 py-10 text-center">
-                <h2 className="text-xl font-semibold mb-4">Không tìm thấy truyện</h2>
+                <div className="text-5xl mb-4">📖</div>
+                <h2 className="text-xl font-semibold mb-2">Không tìm thấy truyện</h2>
+                <p className="text-sm text-gray-500 mb-4">Truyện này có thể đã bị xóa hoặc đường dẫn không đúng.</p>
                 <Link to="/" className="btn btn-primary">Về trang chủ</Link>
             </div>
         );
